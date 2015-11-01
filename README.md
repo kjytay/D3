@@ -8,3 +8,4 @@ This repository contains examples I have gathered which have helped me learn D3.
 
 1. **Example 01**: A single black rectangle and a stripped-down bar chart.
 2. **Example 02**: A circle which changes colour when you hover over it, and a circle which shrinks and grows when you click it.
+3. **Example 03**: Loading data from a .csv file to created a line graph.
