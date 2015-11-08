@@ -1,63 +1,71 @@
 /*---------------------------
- CODE FOR HOVERING CIRCLE DEMO
- Adapted from: http://christopheviau.com/d3_tutorial/
+ CODE FOR RECT DEMO
+ Source: http://www.recursion.org/d3-for-mere-mortals/
 ---------------------------*/
 // Set dimensions for the canvas
-var circ = d3.select("#circle-demo")
-  .append("svg:svg")
-  .attr("width", 100)
-  .attr("height", 100);
+var rectDemo = d3.select("#rect-demo").
+  append("svg:svg").
+  attr("width", 500).
+  attr("height", 300);
 
-circ.append("svg:circle")
-  .style("stroke", "red")  // outline of circle
-  .style("fill", "white")
-  .attr("r", 40)
-  .attr("cx", 50)  // x-coord of circle's centre
-  .attr("cy", 50)  // y-coord of circle's centre
-  .on("mouseover", function() { d3.select(this)
-  								  .style("fill", "aliceblue")
-  								  .style("stroke", "black"); })
-  .on("mouseout" , function() { d3.select(this)
-  								  .style("fill", "white")
-  								  .style("stroke", "red"); });
+rectDemo.append("svg:rect").
+  attr("x", 50).   // top-left corner x-coord
+  attr("y", 100).  // top-left corner y-coord
+  attr("height", 100).
+  attr("width", 300);
 
 /*---------------------------
- CODE FOR ANIMATED CIRCLE DEMO
- Adapted from: http://christopheviau.com/d3_tutorial/
+ CODE FOR BAR CHART DEMO
+ Source: http://www.recursion.org/d3-for-mere-mortals/
+ Note: Did not work out the x-axis labels.
 ---------------------------*/
-var animatedCirc = d3.select("#animated-circle")
-  .append("svg:svg")
-  .attr("width", 100)
-  .attr("height", 100);
 
-animatedCirc.append("svg:circle")
-  .style("stroke", "black")
-  .style("fill", "white")
-  .attr("r", 40)
-  .attr("cx", 50)
-  .attr("cy", 50)
-  .on("mousedown", animateFirstStep);
+var data = [{year: 2006, books: 54},
+            {year: 2007, books: 43},
+            {year: 2008, books: 41},
+            {year: 2009, books: 44},
+            {year: 2010, books: 35}];
 
-// code for the shrinking step
-function animateFirstStep() {
-	d3.select(this)
-	  .transition()
-	  .delay(0)        // how long after fn call before animation starts (ms)
-	  .duration(1000)  // how long the animation sequence takes (ms)
-	  .attr("r", 10)   // final radius
-	  .style("fill", "black")  // can make colour change as well
-	  .each("end", animateSecondStep); // at the end of the animation,
-	  								   // execute animateSecondStep
-};
+var barWidth = 40;
+var width = (barWidth + 10) * data.length; // 10 is to give space in btw bars
+var height = 200;
 
-// code for the growing step
-function animateSecondStep() {
-	d3.select(this)
-	  .transition()
-	  .delay(500)
-	  .duration(1000)
-	  .attr("r", 40)
-	  .style("fill", "white");
-};
+// Set the scales to translate data to pixels
+var x = d3.scale.linear().
+  domain([0, data.length]).
+  range([0, width]);
+var y = d3.scale.linear().
+  domain([0, d3.max(data, function(datum) {
+    return datum.books;
+  })]).
+  rangeRound([0, height]);
+  
+// add canvas to DOM
+var barDemo = d3.select("#bar-demo").
+  append("svg:svg").
+  attr("width", width).
+  attr("height", height + 30);
 
+barDemo.selectAll("rect").
+  data(data).
+  enter().    // used to add elements to the chart
+  append("svg:rect").
+  attr("x", function(datum, index) { return x(index); }).
+  attr("y", function(datum) { return height - y(datum.books); }).
+  attr("height", function(datum) { return y(datum.books) }).
+  attr("width", barWidth).
+  attr("fill", "#ff0000");    // bar color
+  
+// this code chunk is for adding labels to the bars
+barDemo.selectAll("text").
+  data(data).
+  enter().
+  append("svg:text").
+  attr("x", function(datum, index) { return x(index) + barWidth; }).
+  attr("y", function(datum) { return height - y(datum.books); }).
+  attr("dx", -barWidth/2).
+  attr("dy", "1.2em").
+  attr("text-anchor", "middle").
+  text(function(datum) { return datum.books; }).
+  attr("fill", "white");    // font color
   

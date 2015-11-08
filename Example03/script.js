@@ -1,74 +1,63 @@
 /*---------------------------
- CODE FOR LINE GRAPH
- Source: http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
+ CODE FOR HOVERING CIRCLE DEMO
+ Adapted from: http://christopheviau.com/d3_tutorial/
 ---------------------------*/
-// set dimensions of canvas
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-	width = 600 - margin.left - margin.right,
-	height = 270 - margin.top - margin.bottom;
-	
-// function to parse date/time
-var parseDate = d3.time.format("%d-%b-%y").parse;
+// Set dimensions for the canvas
+var circ = d3.select("#circle-demo")
+  .append("svg:svg")
+  .attr("width", 100)
+  .attr("height", 100);
 
-// set the ranges for the axes
-var x = d3.time.scale()
-		  .range([0, width]);
-var y = d3.scale.linear()
-		  .range([height, 0]);
-		  
-// define axes
-// more info on ticks here: http://stackoverflow.com/questions/13100314/change-the-ticks-on-x-axis
-var xAxis = d3.svg.axis()
-			  .scale(x)
-			  .orient("bottom")  // labels appear below the axis
-			  .ticks(5);
-var yAxis = d3.svg.axis()
-			  .scale(y)
-			  .orient("left")  // labels appear on left of axis
-			  .ticks(5);
+circ.append("svg:circle")
+  .style("stroke", "red")  // outline of circle
+  .style("fill", "white")
+  .attr("r", 40)
+  .attr("cx", 50)  // x-coord of circle's centre
+  .attr("cy", 50)  // y-coord of circle's centre
+  .on("mouseover", function() { d3.select(this)
+  								  .style("fill", "aliceblue")
+  								  .style("stroke", "black"); })
+  .on("mouseout" , function() { d3.select(this)
+  								  .style("fill", "white")
+  								  .style("stroke", "red"); });
 
-// define the line graph
-var valueline = d3.svg.line()
-			      .x(function(d) { return x(d.date); })
-			      .y(function(d) { return y(d.close); });
+/*---------------------------
+ CODE FOR ANIMATED CIRCLE DEMO
+ Adapted from: http://christopheviau.com/d3_tutorial/
+---------------------------*/
+var animatedCirc = d3.select("#animated-circle")
+  .append("svg:svg")
+  .attr("width", 100)
+  .attr("height", 100);
 
-// This part on is where it is similar to Example 01.
-// add the svg canvas
-var svg = d3.select("body")
-			.append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-			.append("g")    // used to group svg shapes together
-			.attr("transform", 
-				  "translate(" + margin.left + "," + margin.top + ")");
+animatedCirc.append("svg:circle")
+  .style("stroke", "black")
+  .style("fill", "white")
+  .attr("r", 40)
+  .attr("cx", 50)
+  .attr("cy", 50)
+  .on("mousedown", animateFirstStep);
 
-// get the data
-d3.csv("data.csv", function(error, data) {
-	// parse the data
-	data.forEach(function(d) {
-		d.date = parseDate(d.date);
-		d.close = +d.close;  // + sets the value to a numeric value if it isn't already
-	});
-	
-	// scale the range of the data
-	x.domain(d3.extent(data, function(d) { return d.date; })); //d3.extent gives both
-															   // min & max of data 
-	y.domain([0, d3.max(data, function(d) { return d.close; })]);
-	
-	// add the line graph
-	svg.append("path")
-	   .attr("class", "line")
-	   .attr("d", valueline(data));
-	   
-	// add the x-axis
-	svg.append("g")
-	   .attr("class", "x axis")
-	   .attr("transform", "translate(0," + height + ")")
-	   .call(xAxis);
-	   
-	// add the y-axis
-	svg.append("g")
-	   .attr("class", "y axis")
-	   .call(yAxis);
-	   
-});
+// code for the shrinking step
+function animateFirstStep() {
+	d3.select(this)
+	  .transition()
+	  .delay(0)        // how long after fn call before animation starts (ms)
+	  .duration(1000)  // how long the animation sequence takes (ms)
+	  .attr("r", 10)   // final radius
+	  .style("fill", "black")  // can make colour change as well
+	  .each("end", animateSecondStep); // at the end of the animation,
+	  								   // execute animateSecondStep
+};
+
+// code for the growing step
+function animateSecondStep() {
+	d3.select(this)
+	  .transition()
+	  .delay(500)
+	  .duration(1000)
+	  .attr("r", 40)
+	  .style("fill", "white");
+};
+
+  
