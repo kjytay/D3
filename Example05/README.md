@@ -1,1 +1,1 @@
-Example to illustrate binding of data.
+One text example and 2 SVG examples to illustrate binding of data.

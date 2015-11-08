@@ -1,0 +1,1 @@
+The descending circles as in Example 05, except that JSON is used to simplify the code.
