@@ -1,1 +1,0 @@
-A circle which changes colour when you hover over it, and a circle which shrinks and grows when you click it.

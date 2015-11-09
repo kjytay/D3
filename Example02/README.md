@@ -1,1 +1,0 @@
-A single black rectangle and a stripped-down bar chart.

@@ -1,1 +1,0 @@
-A demonstration of the different types of linear interpolation.
