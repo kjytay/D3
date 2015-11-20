@@ -5,3 +5,4 @@
 3. Pie chart example.
 4. Scatter chart example.
 5. Bubble chart example.
+6. Radar chart example.
