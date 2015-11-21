@@ -13,73 +13,44 @@ var sas = [[1960,0.0478247732151856],[1961,0.0383225958869648],[1962,0.038887416
 
 var ssf = [[1960,0.0297069247951595],[1961,0.030839996076188498],[1962,0.0334481365054735],[1963,0.0383823611974043],[1964,0.0373850974886355],[1965,0.0416450915296278],[1966,0.0449663430505477],[1967,0.0443902237290978],[1968,0.0474989382955448],[1969,0.0544475973839497],[1970,0.06407395567512329],[1971,0.0651193411871049],[1972,0.073484524388417],[1973,0.0940813608163604],[1974,0.122647461479448],[1975,0.13510131992306598],[1976,0.146968976317949],[1977,0.161442020615343],[1978,0.18036146588774601],[1979,0.215716578215229],[1980,0.271497709190136],[1981,0.271614311096045],[1982,0.25356040764095],[1983,0.23715413820644102],[1984,0.226106529627964],[1985,0.210647386817865],[1986,0.23276451310215202],[1987,0.27515897477430296],[1988,0.289718130440563],[1989,0.300906379088857],[1990,0.300398027434827],[1991,0.310977090696925],[1992,0.309478936793128],[1993,0.294653422749536],[1994,0.288787623577666],[1995,0.32726678754607397],[1996,0.33979176406183503],[1997,0.3487737245021],[1998,0.326510741354684],[1999,0.327930693483309],[2000,0.33695797490608503],[2001,0.32866718429288705],[2002,0.345227225537291],[2003,0.44651030536218],[2004,0.557848242700248],[2005,0.653503724718657],[2006,0.7602800186887111],[2007,0.8820445340076181],[2008,0.999925234189761],[2009,0.93629057710226],[2010,1.14097465468216],[2011,1.28322590173042]];
 
-var source = [
-	{ data: eas, show: true, color: "#FE4C4C", name: "East Asia & Pacific" },
-	{ data: ecs, show: true, color: "#B6ED47", name: "Europe & Central Asia" },
-	{ data: lcn, show: true, color: "#2D9999", name: "Latin America & Caribbean" },
-	{ data: mea, show: true, color: "#A50000", name: "Middle East & North Africa" },
-	{ data: sas, show: true, color: "#679A00", name: "South Asia" },
-	{ data: ssf, show: true, color: "#006363", name: "Sub-Saharan Africa" }
-];
+// DRAWING THE CHART
+// variables for plot function
+var $el = $("#chart"),
+    data = [ { data: eas, label: "East Asia & Pacific" },
+	         { data: ecs, label: "Europe & Central Asia" },
+	         { data: lcn, label: "Latin America & Caribbean" },
+	         { data: mea, label: "Middle East & North Africa" },
+	         { data: sas, label: "South Asia" },
+	         { data: ssf, label: "Sub-Saharan Africa" }
+	       ],
+	options = { legend: { position: "nw" },
+				selection: { mode: "xy"}  // mode indicates dir of selections chart will support
+			  };
 
 
-// DRAWING THE LABELS
-$.each(source, function(idx, region) {
-	// create checkbox <input> control
-	var input = $("<input>").attr("type","checkbox").attr("id","chk-"+idx);
-	
-	// if chart is showing the region, set "checked" to true
-	if (region.show) {
-		$(input).prop("checked", true);
-	}
-	
-	// colour block
-	var span = $("<span>").css({
-		"background-color": region.color,
-		"display":          "inline-block",
-		"height":           "0.9em",
-		"width":            "0.9em",
-		"margin-right":     "0.25em",
-	});
-	
-	// create label
-	var label = $("<label>").append(input)
-							.append(span)
-							.append(region.name);
-	$("#controls").append(label);
+// INTERACTION OF CHART
+// .on() function assigns a function to an arbitrary event.
+// 1st param .on() takes is the event of interest, the 2nd param is
+// the function that will process the event.
+$el.on("plotselected", function(ev, ranges) {
+	var plotObj = $.plot($el, data,
+		// extend merges JS objects so that the result contains all of the
+		// properties in each object
+		$.extend(true, {}, options, {
+			xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+			yaxis: { min: ranges.yaxis.from, max: ranges.yaxis.to }
+		})
+	);
 });
 
-
-// DRAWING THE CHART
-// jQuery's extension "plot" can take 2 parameters: 1st one identifies
+// plot the chart the first time
+// jQuery's extension "plot" takes 3 parameters: 1st one identifies
 // the HTML element to contain the chart, 2nd one provides data as an
-// array of datasets.
-var plotObj = $.plot(
-	$("#chart1"),
-	$.map(
-		$.grep(source, function(obj) { return obj.show; }),
-		function(obj) { return { data: obj.data, color: obj.color }; }
-	)
-);
+// array of datasets, 3rd are the chart options.
+plotObj = $.plot($el, data, options);
 
-// TAKING CARE OF CLICKS ON THE CHECKBOXES
-$("input[id^='chk-']").click(function(ev) {
-	// determine which check box was clicked, update show
-	idx = ev.target.id.substr(4);  // ignore "chk-"
-	source[idx].show = !source[idx].show;
-	
-	// reset data, tell library to redraw chart
-	plotObj.setData(
-		// .map takes as 1st element: array of objects and as 2nd element:
-		// a function. map applies the function and replaces the original element
-		// in the array with the new one.
-		$.map(
-			// .grep takes as 1st element: array of objects and as 2nd element:
-			// a function which returns true or false. 2nd element acts as a filter
-			// for the objects in the 1st element.
-			$.grep(source, function(obj) { return obj.show; }),
-			function (obj) { return { data: obj.data, color: obj.color }; }
-		)
-	);
-	plotObj.draw();
-})
+// code for button to unzoom the chart
+$("#unzoom").click(function () {
+	// redraw chart with initial options
+	plotObj = $.plot($el, data, options);
+});
