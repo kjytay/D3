@@ -1,3 +1,5 @@
+All the examples in this folder only use the Flot2 library.
+
 ## Short Description of Examples  
 
 1. 2 bar chart examples.
