@@ -17,7 +17,9 @@ The examples in this folder use a whole variety of Javascript libraries.
 - **(jQuery, Sparkline)** A composite sparkline with enhanced annotations.
 - **(jQuery, Sparkline)** A sparkline that can handle click events. When clicked, a widget will slide out with an "x" button to slide it back in.
 
-### Specialised Graphs (Examples 10-11)  
+### Specialised Graphs (Examples 10-13)  
 
 - **(Raphael, treemap-squared)** A treemap with custom colours.
 - **(heatmap)** A heatmap of basketball shots.
+- **(Sigma, Sigma's forceAtlas2 plug-in)** Drawing a network graph with some interactivity.
+- **(wordcloud2)** A wordcloud with some interactivity.
