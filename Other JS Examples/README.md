@@ -24,6 +24,8 @@ The examples in this folder use a whole variety of Javascript libraries.
 - **(Sigma, Sigma's forceAtlas2 plug-in)** Drawing a network graph with some interactivity.
 - **(wordcloud2)** A wordcloud with some interactivity.
 
-### Timelines (Examples 14-14)  
+### Timelines (Examples 14-16)  
 
 - **(jQuery, qTip2, Raphael, Chronoline)** Create a timeline of Shakespeare's plays using Chronoline.js. (Note: Tooltips does not seem to work.)
+- Create a timeline of Shakespeare's plays just using Javascript and CSS.
+- **(TimelineJS)** Create a timeline of Shakespeare's plays using TimelineJS.
